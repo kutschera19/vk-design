@@ -9,13 +9,13 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         reference_id: "pedido_" + Date.now(),
         customer: {
-          name: "Cliente VK Design",
+          name: "Vitor Teste",
           email: "teste@vkdesign.com",
           tax_id: "14332316622"
         },
         items: [
           {
-            name: "Serviço VK Design",
+            name: "Servico VK Design",
             quantity: 1,
             unit_amount: 5000
           }
@@ -31,14 +31,30 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-console.log("Resposta PagSeguro:", data);
 
-    res.status(200).json(data);
+    // 🔥 MOSTRA ERRO REAL
+    console.log("Resposta PagSeguro:", data);
+
+    // 🔥 TRATAMENTO SE DER ERRO
+    if (!data.qr_codes) {
+      return res.status(400).json({
+        erro: "Erro vindo do PagSeguro",
+        detalhe: data
+      });
+    }
+
+    // 🔥 SUCESSO
+    return res.status(200).json({
       qr_code: data.qr_codes[0].text,
       qr_image: data.qr_codes[0].links[0].href
     });
 
   } catch (error) {
-    res.status(500).json({ error: "Erro ao gerar Pix" });
+    console.error("Erro interno:", error);
+
+    return res.status(500).json({
+      erro: "Erro interno no servidor",
+      detalhe: error.message
+    });
   }
 }
