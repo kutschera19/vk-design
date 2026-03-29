@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         customer: {
           name: "Cliente VK Design",
           email: "cliente@email.com",
-          tax_id: "12345678909"
+          tax_id: "14332316622"
         },
         items: [
           {
