@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         reference_id: "pedido_" + Date.now(),
         customer: {
           name: "Cliente VK Design",
-          email: "cliente@email.com",
+          email: "teste@vkdesign.com",
           tax_id: "14332316622"
         },
         items: [
@@ -31,8 +31,9 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+console.log("Resposta PagSeguro:", data);
 
-    res.status(200).json({
+    res.status(200).json(data);
       qr_code: data.qr_codes[0].text,
       qr_image: data.qr_codes[0].links[0].href
     });
