@@ -3,19 +3,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "SUA_KEY",
-  authDomain: "SEU_DOMINIO",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_BUCKET",
-  messagingSenderId: "SEU_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyCku2aJNn03MyPTQTS-2P6Zn9bVHB5K2pA",
+  authDomain: "vkdesigner-plataforma.firebaseapp.com",
+  projectId: "vkdesigner-plataforma",
+  storageBucket: "vkdesigner-plataforma.firebasestorage.app",
+  messagingSenderId: "889000098109",
+  appId: "1:889000098109:web:3053a11bcc2e2fa3186d54",
+  measurementId: "G-LCTWFTQ9WW"
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 
-rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
