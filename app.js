@@ -24,7 +24,7 @@ window.fazerLogin = async function(email, pwd) {
     window.saveSession(user);
     window.entrarNaPlataforma(user);
   } catch(e) {
-    alert("Erro: " + e.code);
+    console.error("Erro login:", e.code);
   }
 };
 
