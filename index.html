@@ -4922,13 +4922,19 @@ async function doCadastro() {
 
   setBtnLoading(btn, true);
 
-  // Verifica e-mail duplicado no Supabase também
-  if (SUPABASE_READY) await sbLoadUsers();
-  if (DB.users.find(u => u.email === email)) {
-    setBtnLoading(btn, false);
-    showErr(err,'Este e-mail já está cadastrado.');
-    return;
+  try {
+  await createUserWithEmailAndPassword(auth, email, pwd);
+  ok.classList.add('show');
+  ok.textContent = 'Conta criada com sucesso!';
+} catch(e) {
+  setBtnLoading(btn, false);
+  if (e.code === 'auth/email-already-in-use') {
+    showErr(err, 'Este e-mail já está cadastrado.');
+  } else {
+    showErr(err, 'Erro ao criar conta: ' + e.message);
   }
+  return;
+}
 
   const newUser = {
     id:         'u' + Date.now(),
