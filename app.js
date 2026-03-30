@@ -9,6 +9,7 @@ console.log("APP CARREGOU");
 const ADMIN_EMAIL = "vkdesign@admin.com";
 
 window.fazerLogin = async function(email, pwd) {
+  alert("Tentando login com: " + email); // ← temporário
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pwd);
     const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
@@ -16,7 +17,7 @@ window.fazerLogin = async function(email, pwd) {
     window.saveSession(user);
     window.entrarNaPlataforma(user);
   } catch(e) {
-    alert("E-mail ou senha incorretos.");
+    alert("Erro Firebase: " + e.code); // ← mostra erro exato
   }
 };
 
