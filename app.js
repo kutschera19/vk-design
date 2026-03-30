@@ -11,7 +11,7 @@ const ADMIN_EMAIL = "vkdesign@admin.com";
 window.fazerLogin = async function(email, pwd) {
   alert("Tentando login com: " + email); // ← temporário
   try {
-    const cred = await signInWithEmailAndPassword(auth, email, pwd);
+    const cred = await signInWithEmailAndPassword(window._auth, email, pwd);
     const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
     const user = { email: cred.user.email, role };
     window.saveSession(user);
