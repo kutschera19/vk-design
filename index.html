@@ -4876,18 +4876,8 @@ async function doLogin() {
   setBtnLoading(btn, true);
 
   // login com Firebase Auth
-try {
-  const cred = await signInWithEmailAndPassword(auth, email, pwd);
-  const ADMIN_EMAIL = "vkdesign@admin.com";
-  const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
-  const user = { email: cred.user.email, role };
-  saveSession(user);
-  entrarNaPlataforma(user);  // ← entra aqui dentro
-} catch(e) {
-  showErr(err, 'E-mail ou senha incorretos.');
-  setBtnLoading(btn, false);
-  return;
-}
+await window.fazerLogin(email, pwd);
+return;
   
 function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
@@ -4922,19 +4912,8 @@ async function doCadastro() {
 
   setBtnLoading(btn, true);
 
-  try {
-  await createUserWithEmailAndPassword(auth, email, pwd);
-  ok.classList.add('show');
-  ok.textContent = 'Conta criada com sucesso!';
-} catch(e) {
-  setBtnLoading(btn, false);
-  if (e.code === 'auth/email-already-in-use') {
-    showErr(err, 'Este e-mail já está cadastrado.');
-  } else {
-    showErr(err, 'Erro ao criar conta: ' + e.message);
-  }
-  return;
-}
+  await window.fazerCadastro(email, pwd);
+return;
 }
   const newUser = {
     id:         'u' + Date.now(),
