@@ -21,10 +21,14 @@ window.fazerLogin = async function(email, pwd) {
     const cred = await signInWithEmailAndPassword(auth, email, pwd);
     const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
     const user = { email: cred.user.email, role };
+    console.log("Login OK:", user);
+    console.log("saveSession existe?", typeof window.saveSession);
+    console.log("entrarNaPlataforma existe?", typeof window.entrarNaPlataforma);
     window.saveSession(user);
     window.entrarNaPlataforma(user);
   } catch(e) {
-    console.error("Erro login:", e.code);
+    console.error("Erro completo:", e);
+    alert("Erro: " + (e.code || e.message || JSON.stringify(e)));
   }
 };
 
