@@ -10326,6 +10326,7 @@ function initSupabase() {
       console.log('[Firebase] SDK ainda não pronto — usando localStorage por agora');
       return false;
     }
+        if (db) { SUPABASE_READY = true; return true; } // já inicializado por __onFirebaseReady
     if (!firebase.apps || !firebase.apps.length) {
       firebase.initializeApp(FB_CONFIG);
     }
