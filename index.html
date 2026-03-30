@@ -4878,6 +4878,7 @@ async function doLogin() {
   // login com Firebase Auth
 await window.fazerLogin(email, pwd);
 return;
+}
   
 function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
@@ -4912,7 +4913,7 @@ async function doCadastro() {
 
   setBtnLoading(btn, true);
 
-  await window.fazerCadastro(email, pwd);
+await window.fazerCadastro(email, pwd);
 return;
 }
 
