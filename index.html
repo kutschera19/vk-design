@@ -7752,19 +7752,8 @@ async function doLogin() {
 
   setBtnLoading(btn, true);
 
-  // Se Supabase ativo, busca usuário do banco antes de validar
-  if (SUPABASE_READY) {
-    await sbLoadUsers();
-  }
-
-  // Pequeno delay visual (sem setTimeout para evitar race condition)
-  await new Promise(r => setTimeout(r, 600));
-  setBtnLoading(btn, false);
-  const user = DB.users.find(u => u.email.toLowerCase() === email && u.pwd === pwd);
-  if (!user) { showErr(err, 'E-mail ou senha incorretos. Verifique seus dados.'); return; }
-  saveEmailHistory(email);
-  saveSession(user);
-  entrarNaPlataforma(user);
+  await window.fazerLogin(email, pwd);
+setBtnLoading(btn, false);
 }
 
 function loginDemo(role) {
@@ -7778,12 +7767,12 @@ function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
     inicializarAdmin(user);
     mostrarTela('pageAdmin');
-    toast('Bem-vindo, ' + user.name.split(' ')[0] + '! 👋', 'success');
+   toast('Bem-vindo! 👋', 'success');
   } else {
     inicializarCliente(user);
     clienteTab('home', document.getElementById('navHome'));
     mostrarTela('pageCliente');
-    toast('Olá, ' + user.name.split(' ')[0] + '! Pronto para criar? 🎨', 'success');
+    toast('Olá! Pronto para criar? 🎨', 'success');
   }
 }
 
@@ -7807,44 +7796,9 @@ async function doCadastro() {
 
   setBtnLoading(btn, true);
 
-  // Verifica e-mail duplicado no Supabase também
-  if (SUPABASE_READY) await sbLoadUsers();
-  if (DB.users.find(u => u.email === email)) {
-    setBtnLoading(btn, false);
-    showErr(err,'Este e-mail já está cadastrado.');
-    return;
-  }
-
-  const newUser = {
-    id:         'u' + Date.now(),
-    name:       nome,
-    email,
-    whatsapp:   wa,
-    role:       'cliente',
-    pwd,
-    created_at: new Date().toISOString().slice(0,10),
-  };
-  DB.users.push(newUser);
-
-  // Salva no Supabase
-  await sbSaveUser(newUser);
-
-  // Salva no localStorage como cache
-  try {
-    const saved = JSON.parse(localStorage.getItem('vk_users') || '[]');
-    saved.push({ ...newUser, pwd: btoa(pwd) });
-    localStorage.setItem('vk_users', JSON.stringify(saved));
-  } catch(e) {}
-
-  setBtnLoading(btn, false);
-  ok.classList.add('show');
-  setTimeout(() => {
-    saveSession(newUser);
-    inicializarCliente(newUser);
-    clienteTab('home', document.getElementById('navHome'));
-    mostrarTela('pageCliente');
-    toast(`Bem-vindo, ${newUser.name.split(' ')[0]}! 🎉`, 'success');
-  }, 1200);
+await window.fazerCadastro(email, pwd);
+setBtnLoading(btn, false);
+}
 }
 
 function doRecuperar() {
