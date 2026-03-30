@@ -4878,7 +4878,7 @@ async function doLogin() {
   // login com Firebase Auth
 try {
   const cred = await signInWithEmailAndPassword(auth, email, pwd);
-  const ADMIN_EMAIL = "seuemail@gmail.com";
+  const ADMIN_EMAIL = "vkdesign@admin.com";
   const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
   const user = { email: cred.user.email, role };
   saveSession(user);
