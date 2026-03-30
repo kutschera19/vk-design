@@ -4880,15 +4880,11 @@ async function doLogin() {
     await sbLoadUsers();
   }
 
-  // Pequeno delay visual (sem setTimeout para evitar race condition)
-  await new Promise(r => setTimeout(r, 600));
-  setBtnLoading(btn, false);
-  const user = DB.users.find(u => u.email.toLowerCase() === email && u.pwd === pwd);
-  if (!user) { showErr(err, 'E-mail ou senha incorretos. Verifique seus dados.'); return; }
-  saveEmailHistory(email);
-  saveSession(user);
-  entrarNaPlataforma(user);
-}
+  // login com Firebase Auth
+const cred = await signInWithEmailAndPassword(auth, email, pwd);
+const user = { email: cred.user.email, role: 'cliente' };
+saveSession(user);
+entrarNaPlataforma(user);
 
 function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
