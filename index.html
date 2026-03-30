@@ -4927,7 +4927,7 @@ function doRecuperar() {
   if (!email) { showErr(err,'Digite seu e-mail.'); return; }
 
 setBtnLoading(btn, true);
-await window.fazerLogin(email, pwd);
+window.fazerLogin(email, pwd);
 setBtnLoading(btn, false);
 }
 
