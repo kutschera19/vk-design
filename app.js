@@ -8,39 +8,34 @@ import {
 
 console.log("APP CARREGOU");
 
-// ── CADASTRO ──
-window.cadastrar = async function(email, senha) {
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, senha);
-    console.log("Conta criada:", cred.user.email);
-    alert("Conta criada com sucesso!");
-  } catch (e) {
-    alert("Erro ao cadastrar: " + e.message);
-  }
-};
+// ── Email fixo do admin ──
+const ADMIN_EMAIL = "seuemail@gmail.com"; // ← troca pelo seu email real
 
 // ── LOGIN ──
-window.login = async function(email, senha) {
+window.fazerLogin = async function(email, pwd) {
   try {
-    const cred = await signInWithEmailAndPassword(auth, email, senha);
-    console.log("Logado:", cred.user.email);
-    alert("Login realizado!");
-  } catch (e) {
-    alert("Erro ao logar: " + e.message);
+    const cred = await signInWithEmailAndPassword(auth, email, pwd);
+    const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
+    const user = { email: cred.user.email, role };
+    saveSession(user);
+    entrarNaPlataforma(user);
+  } catch(e) {
+    showErr(document.getElementById('errLogin'), 'E-mail ou senha incorretos.');
   }
 };
 
-// ── LOGOUT ──
-window.logout = async function() {
-  await signOut(auth);
-  alert("Saiu da conta!");
+// ── CADASTRO (só clientes) ──
+window.fazerCadastro = async function(email, pwd) {
+  if (email === ADMIN_EMAIL) {
+    alert("Este e-mail não pode ser cadastrado.");
+    return;
+  }
+  try {
+    await createUserWithEmailAndPassword(auth, email, pwd);
+    alert("Conta criada com sucesso!");
+  } catch(e) {
+    alert("Erro: " + e.message);
+  }
 };
 
-// ── DETECTA SE ESTÁ LOGADO ──
-onAuthStateChanged(auth, function(user) {
-  if (user) {
-    console.log("Usuário logado:", user.email);
-  } else {
-    console.log("Nenhum usuário logado");
-  }
-});
+console.log("APP RODANDO");
