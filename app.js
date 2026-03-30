@@ -9,7 +9,7 @@ import {
 console.log("APP CARREGOU");
 
 // ── Email fixo do admin ──
-const ADMIN_EMAIL = "seuemail@gmail.com"; // ← troca pelo seu email real
+const ADMIN_EMAIL = "vkdesign@admin.com"; // ← troca pelo seu email real
 
 // ── LOGIN ──
 window.fazerLogin = async function(email, pwd) {
