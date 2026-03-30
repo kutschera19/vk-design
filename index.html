@@ -4927,12 +4927,9 @@ function doRecuperar() {
   if (!email) { showErr(err,'Digite seu e-mail.'); return; }
 
   setBtnLoading(btn, true);
-  setTimeout(() => {
-    setBtnLoading(btn, false);
-    const exists = DB.users.find(u => u.email === email);
-    if (!exists) { showErr(err,'E-mail não encontrado na plataforma.'); return; }
-    ok.classList.add('show');
-  }, 900);
+  setBtnLoading(btn, true);
+await window.fazerLogin(email, pwd);
+setBtnLoading(btn, false);
 }
 
 // ══════════════════════════════════════
