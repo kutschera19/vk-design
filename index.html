@@ -276,19 +276,6 @@ body::after{
 .btn-full.loading .btn-spin{display:block}
 .btn-spin{display:none;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite}
 
-.btn-ghost-full{
-  width:100%;padding:13px;
-  background:transparent;color:var(--muted);
-  border:1px solid var(--bd2);border-radius:var(--r);
-  font-size:14px;font-weight:500;
-  transition:all .2s;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-ghost-full:hover{color:var(--white);border-color:var(--bd-glow);background:rgba(0,180,216,.04)}
-
-.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted2);font-size:12px}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--bd)}
-
 .auth-link{
   text-align:center;font-size:13px;color:var(--muted);margin-top:20px;
 }
@@ -3182,15 +3169,6 @@ body::before {
     <button class="btn-full" id="btnLogin" onclick="doLogin()">
       <span class="btn-text">Entrar na plataforma →</span>
       <span class="btn-spin"></span>
-    </button>
-
-    <div class="auth-divider">ou</div>
-
-    <button class="btn-ghost-full" onclick="loginDemo('cliente')">
-      <span>👤</span> Entrar como Cliente (demo)
-    </button>
-    <button class="btn-ghost-full" style="margin-top:8px" onclick="loginDemo('admin')">
-      <span>⚙</span> Entrar como Admin (demo)
     </button>
 
     <div class="auth-link">Não tem conta? <a href="#" onclick="mostrarTela('pageCadastro')">Criar conta grátis</a></div>
@@ -7774,13 +7752,6 @@ async function doLogin() {
 
   await window.fazerLogin(email, pwd);
 setBtnLoading(btn, false);
-}
-
-function loginDemo(role) {
-  const user = DB.users.find(u => u.role === role);
-  if (!user) return;
-  saveSession(user);
-  entrarNaPlataforma(user);
 }
 
 function entrarNaPlataforma(user) {
