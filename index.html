@@ -8039,14 +8039,15 @@ function inicializarCliente(user) {
       clienteNav.style.cssText = 'display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(5,7,13,.98);border-top:1px solid rgba(0,180,216,.15);padding:6px 0;';
     }
   }
-  const ini = user.name[0].toUpperCase();
-  document.getElementById('clienteAvatarSide').textContent = ini;
-  document.getElementById('clienteAvatarCard').textContent = ini;
-  document.getElementById('clienteNameSide').textContent = user.name;
-  document.getElementById('clienteNameCard').textContent = user.name;
-  document.getElementById('clienteEmailCard').textContent = user.email;
-  document.getElementById('profNome').value = user.name;
-  document.getElementById('profEmail').value = user.email;
+const nome = user.name || user.email.split('@')[0];
+const ini = nome[0].toUpperCase();
+document.getElementById('clienteAvatarSide').textContent = ini;
+document.getElementById('clienteAvatarCard').textContent = ini;
+document.getElementById('clienteNameSide').textContent = nome;
+document.getElementById('clienteNameCard').textContent = nome;
+document.getElementById('clienteEmailCard').textContent = user.email;
+document.getElementById('profNome').value = nome;
+document.getElementById('profEmail').value = user.email;
   document.getElementById('profWa').value = user.whatsapp||'';
   renderClienteOrders(user);
   renderClienteNotifs(user);
