@@ -4876,13 +4876,19 @@ async function doLogin() {
   setBtnLoading(btn, true);
 
   // login com Firebase Auth
-const cred = await signInWithEmailAndPassword(auth, email, pwd);
-const ADMIN_EMAIL = "seuemail@gmail.com"; // ← seu email real aqui
-const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
-const user = { email: cred.user.email, role };
-saveSession(user);
-entrarNaPlataforma(user);
-
+try {
+  const cred = await signInWithEmailAndPassword(auth, email, pwd);
+  const ADMIN_EMAIL = "seuemail@gmail.com";
+  const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
+  const user = { email: cred.user.email, role };
+  saveSession(user);
+  entrarNaPlataforma(user);  // ← entra aqui dentro
+} catch(e) {
+  showErr(err, 'E-mail ou senha incorretos.');
+  setBtnLoading(btn, false);
+  return;
+}
+  
 function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
     inicializarAdmin(user);
@@ -4892,7 +4898,7 @@ function entrarNaPlataforma(user) {
     inicializarCliente(user);
     clienteTab('home', document.getElementById('navHome'));
     mostrarTela('pageCliente');
-    toast('Olá, ' + user.name.split(' ')[0] + '! Pronto para criar? 🎨', 'success');
+    toast('Olá! Pronto para criar? 🎨', 'success');
   }
 }
 
