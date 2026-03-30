@@ -4915,37 +4915,6 @@ async function doCadastro() {
   await window.fazerCadastro(email, pwd);
 return;
 }
-  const newUser = {
-    id:         'u' + Date.now(),
-    name:       nome,
-    email,
-    whatsapp:   wa,
-    role:       'cliente',
-    pwd,
-    created_at: new Date().toISOString().slice(0,10),
-  };
-  DB.users.push(newUser);
-
-  // Salva no Supabase
-  await sbSaveUser(newUser);
-
-  // Salva no localStorage como cache
-  try {
-    const saved = JSON.parse(localStorage.getItem('vk_users') || '[]');
-    saved.push({ ...newUser, pwd: btoa(pwd) });
-    localStorage.setItem('vk_users', JSON.stringify(saved));
-  } catch(e) {}
-
-  setBtnLoading(btn, false);
-  ok.classList.add('show');
-  setTimeout(() => {
-    saveSession(newUser);
-    inicializarCliente(newUser);
-    clienteTab('home', document.getElementById('navHome'));
-    mostrarTela('pageCliente');
-    toast(`Bem-vindo, ${newUser.name.split(' ')[0]}! 🎉`, 'success');
-  }, 1200);
-}
 
 function doRecuperar() {
   const email = document.getElementById('recEmail').value.trim().toLowerCase();
