@@ -4889,12 +4889,6 @@ async function doLogin() {
   saveSession(user);
   entrarNaPlataforma(user);
 }
-
-function loginDemo(role) {
-  const user = DB.users.find(u => u.role === role);
-  if (!user) return;
-  saveSession(user);
-  entrarNaPlataforma(user);
 }
 
 function entrarNaPlataforma(user) {
