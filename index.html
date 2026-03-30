@@ -4875,14 +4875,11 @@ async function doLogin() {
 
   setBtnLoading(btn, true);
 
-  // Se Supabase ativo, busca usuário do banco antes de validar
-  if (SUPABASE_READY) {
-    await sbLoadUsers();
-  }
-
   // login com Firebase Auth
 const cred = await signInWithEmailAndPassword(auth, email, pwd);
-const user = { email: cred.user.email, role: 'cliente' };
+const ADMIN_EMAIL = "seuemail@gmail.com"; // ← seu email real aqui
+const role = cred.user.email === ADMIN_EMAIL ? 'admin' : 'cliente';
+const user = { email: cred.user.email, role };
 saveSession(user);
 entrarNaPlataforma(user);
 
@@ -4890,7 +4887,7 @@ function entrarNaPlataforma(user) {
   if (user.role === 'admin') {
     inicializarAdmin(user);
     mostrarTela('pageAdmin');
-    toast('Bem-vindo, ' + user.name.split(' ')[0] + '! 👋', 'success');
+    toast('Bem-vindo! 👋', 'success');
   } else {
     inicializarCliente(user);
     clienteTab('home', document.getElementById('navHome'));
