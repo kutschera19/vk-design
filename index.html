@@ -57,6 +57,7 @@
       s2.onload = function() {
         window.__firebaseReady = true;
         console.log('[Firebase] SDK carregado via:', cdn);
+        if (typeof window.__onFirebaseReady === 'function') window.__onFirebaseReady();
       };
       s2.onerror = function() {
         console.log('[Firebase] Falhou firestore via:', cdn);
@@ -7545,7 +7546,26 @@ const FB_CONFIG = {
 let SUPABASE_READY = false; // alias — true quando Firebase conectar
 let db = null;              // instância do Firestore
 
-
+// ── INICIALIZAÇÃO DO FIRESTORE ──────────────────────────────────────────
+window.__onFirebaseReady = function() {
+  try {
+      if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+          db = firebase.firestore();
+              SUPABASE_READY = true;
+                  console.log('[Firestore] Conectado e pronto!');
+                      // Recarrega dados do Firestore ao conectar
+                          if (typeof loadPortfolio   === 'function') loadPortfolio();
+                              if (typeof loadOrders      === 'function') loadOrders();
+                                  if (typeof loadUsers       === 'function') loadUsers();
+                                      if (typeof loadServicos    === 'function') loadServicos();
+                                          if (typeof loadNotificacoes=== 'function') loadNotificacoes();
+                                            } catch(e) {
+                                                console.error('[Firestore] Erro ao inicializar:', e);
+                                                    SUPABASE_READY = false;
+                                                      }
+                                                      };
+                                                      // Se Firebase SDK já carregou antes do script rodar
+if (window.__firebaseReady) window.__onFirebaseReady();
 
 // ── Helpers Firestore ──
 // Converte documento Firestore para objeto JS puro
