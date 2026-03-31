@@ -42,12 +42,13 @@
     'https://cdn.jsdelivr.net/npm/firebase@10.12.0/',
   ];
   var loaded = 0;
-  var needed = 2; // app + firestore
+  var needed = 3; // app + firestore
 
   function tryLoad(cdn, idx) {
     var scripts = [
       cdn + 'firebase-app-compat.js',
       cdn + 'firebase-firestore-compat.js',
+      cdn + 'firebase-storage-compat.js',
     ];
     var s = document.createElement('script');
     s.src = scripts[0];
@@ -3910,7 +3911,7 @@ body::before {
     <div style="font-size:13px;color:var(--muted);font-family:'Space Mono',monospace">PASSO 2 DE 3</div>
   </div>
 
-  <div class="briefing-wrap">
+  <div id="briefingStepsContainer" style="padding:2rem;max-width:600px;margin:0 auto">
     <div class="briefing-header">
       <div class="lbl" style="margin-bottom:10px">// DETALHES DO PEDIDO</div>
       <h2 id="bfMainTitle">CONTE COMO<br>QUER SUA ARTE</h2>
@@ -7523,12 +7524,14 @@ const FB_CONFIG = {
 // Variáveis de estado — mantém compatibilidade com código existente
 let SUPABASE_READY = false; // alias — true quando Firebase conectar
 let db = null;              // instância do Firestore
+let storage = null;              // instância do storageBucket
 
 // ── INICIALIZAÇÃO DO FIRESTORE ──────────────────────────────────────────
 window.__onFirebaseReady = function() {
   try {
       if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
           db = firebase.firestore();
+          storage = firebase.storage();
               SUPABASE_READY = true;
                   console.log('[Firestore] Conectado e pronto!');
                       // Recarrega dados do Firestore ao conectar
@@ -7537,6 +7540,7 @@ window.__onFirebaseReady = function() {
                                   if (typeof loadUsers       === 'function') loadUsers();
                                       if (typeof loadServicos    === 'function') loadServicos();
                                           if (typeof loadNotificacoes=== 'function') loadNotificacoes();
+                                          if(typeof loadDeliveries==='function')loadDeliveries();
                                             } catch(e) {
                                                 console.error('[Firestore] Erro ao inicializar:', e);
                                                     SUPABASE_READY = false;
@@ -11096,5 +11100,25 @@ mostrarTela = function(id) {
 </script>
 
 <script type="module" src="app.js"></script>
+<!-- VK Modals -->
+<div id="vkOrderModal" class="vk-modal-overlay" onclick="if(event.target===this)vkCloseModal('vkOrderModal')">
+  <div class="vk-modal">
+    <h3 id="vkModalTitle">Pedido</h3>
+    <div id="vkModalBody"></div>
+  </div>
+</div>
+<div id="vkUploadModal" class="vk-modal-overlay" onclick="if(event.target===this)vkCloseModal('vkUploadModal')">
+  <div class="vk-modal" style="max-width:420px">
+    <h3>📤 Enviar Arquivo</h3>
+    <input type="file" id="vkUploadFile" style="margin:1rem 0;width:100%">
+    <progress id="vkUploadProgress" max="100" value="0" style="display:none"></progress>
+    <div style="display:flex;gap:.75rem;margin-top:1rem">
+      <button class="btn-vk" onclick="vkHandleUpload()">Enviar</button>
+      <button class="btn-vk btn-ghost" onclick="vkCloseModal('vkUploadModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+<script src="features.js"></script>
+
 </body>
 </html>
