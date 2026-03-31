@@ -11109,11 +11109,12 @@ mostrarTela = function(id) {
 </div>
 <div id="vkUploadModal" class="vk-modal-overlay" onclick="if(event.target===this)vkCloseModal('vkUploadModal')">
   <div class="vk-modal" style="max-width:420px">
-    <h3>📤 Enviar Arquivo</h3>
-    <input type="file" id="vkUploadFile" style="margin:1rem 0;width:100%">
-    <progress id="vkUploadProgress" max="100" value="0" style="display:none"></progress>
+    <h3>Enviar Link</h3>
+    <p style="color:#888;font-size:.84rem;margin:.25rem 0 1rem">Cole um link do Google Drive, Dropbox ou WeTransfer</p>
+    <input type="text" id="vkUploadUrl" class="bf-input" placeholder="https://drive.google.com/...">
+    <input type="text" id="vkUploadName" class="bf-input" placeholder="Nome do arquivo (ex: logo_final.pdf)" style="margin-top:.75rem">
     <div style="display:flex;gap:.75rem;margin-top:1rem">
-      <button class="btn-vk" onclick="vkHandleUpload()">Enviar</button>
+      <button class="btn-vk" onclick="vkHandleUpload()">Salvar Link</button>
       <button class="btn-vk btn-ghost" onclick="vkCloseModal('vkUploadModal')">Cancelar</button>
     </div>
   </div>

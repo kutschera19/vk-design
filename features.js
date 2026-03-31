@@ -144,44 +144,28 @@ window.vkChangeStatus=function(orderId,newStatus){
 var _uploadOrderId=null;
 window.vkOpenUpload=function(orderId){
   _uploadOrderId=orderId;
-  document.getElementById('vkUploadProgress').style.display='none';
-  document.getElementById('vkUploadProgress').value=0;
-  document.getElementById('vkUploadFile').value='';
+  var u=document.getElementById('vkUploadUrl');
+  var n=document.getElementById('vkUploadName');
+  if(u)u.value='';if(n)n.value='';
   vkShowModal('vkUploadModal');
 };
 
 window.vkHandleUpload=function(){
-  var fileInput=document.getElementById('vkUploadFile');
-  var file=fileInput.files[0];
-  if(!file){vkToast('Selecione um arquivo','warning');return;}
-  if('window.storage){vkToast('Firebase Storage nÃ£o configurado','error');return;}
+  var url=(document.getElementById('vkUploadUrl')||{}).value||'';
+  var name=(document.getElementById('vkUploadName')||{}).value||'';
+  url=url.trim();name=name.trim();
+  if(!url){vkToast('Cole o link do arquivo','warning');return;}
+  if(!name)name=url.split('/').pop()||'arquivo';
+  if(!window.db||!SUPABASE_READY){vkToast('Firebase nao conectado','error');return;}
   var uid=(window.session&&session.user)?session.user.uid:'admin';
-  var path='deliveries/'+_uploadOrderId+'/'+Date.now()+'_'+file.name;
-  var ref=window.storage.ref(path);
-  var task=ref.put(file);
-  var bar=document.getElementById('vkUploadProgress');
-  bar.style.display='block';
-  task.on('state_changed',
-    function(snap){bar.value=snap.bytesTransferred/snap.totalBytes*100;},
-    function(err){vkToast('Erro upload: '+err.message,'error');},
-    function(){
-      task.snapshot.ref.getDownloadURL().then(function(url){
-        var delivery={
-          id:vkUid(),order_id:_uploadOrderId,user_id:uid,
-          file_url:url,file_path:path,file_name:file.name,
-          file_type:file.type,file_size:file.size,version:1,
-          created_at:firebase.firestore.FieldValue.serverTimestamp()
-        };
-        db.collection('deliveries').doc(delivery.id).set(delivery).then(function(){
-          if(!DB.deliveries) DB.deliveries=[];
-          DB.deliveries.push(delivery);
-          vkToast('Arquivo enviado!','success');
-          vkCloseModal('vkUploadModal');
-          vkOpenOrder(_uploadOrderId);
-        });
-      });
-    }
-  );
+  var delivery={id:vkUid(),order_id:_uploadOrderId,user_id:uid,file_url:url,file_path:url,file_name:name,file_type:'link',file_size:0,version:1,created_at:firebase.firestore.FieldValue.serverTimestamp()};
+  db.collection('deliveries').doc(delivery.id).set(delivery).then(function(){
+    if(!DB.deliveries)DB.deliveries=[];
+    DB.deliveries.push(delivery);
+    vkToast('Link salvo!','success');
+    vkCloseModal('vkUploadModal');
+    vkOpenOrder(_uploadOrderId);
+  }).catch(function(e){vkToast('Erro: '+e.message,'error');});
 };
 
 // ââ Client: render orders âââââââââââââââââââââââââââââââââââââââââââââââââââââ
